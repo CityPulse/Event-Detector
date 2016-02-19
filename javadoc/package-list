@@ -1,0 +1,5 @@
+com.siemens.ct.citypulse.event.detection.api
+com.siemens.ct.citypulse.event.detection.core
+com.siemens.ct.citypulse.event.detection.resources
+com.siemens.ct.citypulse.event.detection.resources.streamDescription
+com.siemens.ct.citypulse.event.detection.test
