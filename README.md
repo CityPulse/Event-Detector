@@ -35,7 +35,7 @@ And that’s about it. In your custom node class ParkingEventDetectionNode in th
 
 ## Methods
 
-Can be seen in the [Javadoc](EventDetection/javadoc) file. 
+Can be seen in the [Javadoc](/javadoc) file. 
 
 
 ## Authors
