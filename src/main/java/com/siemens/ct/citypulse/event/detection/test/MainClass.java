@@ -29,10 +29,6 @@ public class MainClass {
 		try {
 			while ((line2 = reader.readLine()) != null) {
 					
-				if(i==30)
-				{
-					break;
-				}
 				//parsing the UUID, lat and long 
 				String UUID = line2.substring(0, line2.indexOf(","));
 				
