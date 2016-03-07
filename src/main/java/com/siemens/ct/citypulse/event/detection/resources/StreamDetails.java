@@ -33,8 +33,14 @@ public class StreamDetails {
 
 	public static String resourceManagerConnectorPort = Utils.loadConfigurationProp("resourceManagerConnectorPort");
 
+	/**
+	 * HashMap that links the field name and their data type
+	 */
 	private HashMap<String, Object> mapDef;
 
+	/**
+	 * List of fields extracted from the SPARQL Endpoint
+	 */
 	private ArrayList<String> fieldsFromRDF;
 	
 	private boolean valid = true;
@@ -70,84 +76,8 @@ public class StreamDetails {
 		
 		// obtaining the fields and their type
 		mapDef = getInputField(streamDescription.getData().getField_array(), fieldsFromRDF);
-		//see the results
-		//System.out.println("mapDef : " +mapDef);
-		//
-		//the code below was used to get the UUIDs and coordinates for all sensors and save them in a file
-		//
-		
-		/*String temp_location = streamDescription.getData().getLocation();
-		String normalCoordinates = getNormalCoordinates(temp_location);
-		
-		File file = new File("C:/Users/z003jn8y/Desktop/COORDANDUUID.txt");
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(file,true);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		BufferedWriter bw = new BufferedWriter(fw);
-		try {
-			bw.write(streamID+","+normalCoordinates);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			bw.newLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 	
 	}
-
-	/**
-	 * Method used to get the coordinates using the UUID of the stream.
-	 *
-	 * @param temp_location the string representing the coordinates
-	 * @return the coordinates in lat,long format
-	 */
-	/*private String getNormalCoordinates(String temp_location) {
-		
-		String toReturn = null;
-		System.out.println(temp_location);
-		
-		if(temp_location.toUpperCase().contains("POINT".toUpperCase()))
-		{
-			toReturn = temp_location.substring(temp_location.indexOf("(")+1, temp_location.indexOf(")"));
-			System.out.println(toReturn);
-		}
-		if(temp_location.toUpperCase().contains("LINESTRING".toUpperCase()))
-		{
-			temp_location = temp_location.substring(temp_location.indexOf("(")+1, temp_location.indexOf(")"));
-			System.out.println(temp_location);
-			
-			String first_coord = temp_location.substring(0, temp_location.indexOf(","));
-			String second_coord = temp_location.substring(temp_location.indexOf(",")+2, temp_location.length());
-			
-			System.out.println("First coord: "+first_coord);
-			System.out.println("Second coord: "+second_coord);
-			
-			Double lat_1 = Double.parseDouble(first_coord.substring(0, first_coord.indexOf(" ")));
-			Double lon_1 = Double.parseDouble(first_coord.substring(first_coord.indexOf(" ")+1, first_coord.length()));
-			
-			Double lat_2 = Double.parseDouble(second_coord.substring(0, second_coord.indexOf(" ")));
-			System.out.println("lat_2: "+lat_2);
-			Double lon_2 = Double.parseDouble(second_coord.substring(second_coord.indexOf(" ")+1, second_coord.length()));
-			
-			Double lat_f = (lat_1+lat_2)/2;
-			Double lon_f = (lon_1+lon_2)/2;
-			
-			toReturn = lat_f+","+lon_f;
-			System.out.println("Final coord: "+toReturn);
-		}
-		
-		return toReturn;
-	}*/
 
 	/**
 	 * Method used to get the description(fields) of a particular sensor via Virtuoso
@@ -159,6 +89,7 @@ public class StreamDetails {
 
 		fieldsFromRDF = new ArrayList<String>();
 		//System.out.println("streamID : "+streamID);
+		
 		// creating a query to send to Virtuoso sparql endpoint		
 		String query_SPARQL = "PREFIX DUL: <http://www.loa-cnr.it/ontologies/DUL.owl#> "
 				+ "PREFIX ces: <http://www.insight-centre.org/ces#> " 

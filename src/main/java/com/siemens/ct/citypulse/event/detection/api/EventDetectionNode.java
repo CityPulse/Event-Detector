@@ -27,16 +27,41 @@ public abstract class EventDetectionNode {
 
 	Logger logger = Logger.getLogger(EventDetectionNode.class);
 
+	/**
+	 * The ID of the stream that was added in the MainClass.class
+	 */
 	private String eventDetectionLogicID;
+	
+	/**
+	 * The type of event. Eg: TrafficJam , PublicParking
+	 */
 	protected String eventType;
+	
+	/**
+	 * The name of the event. It was discusses upon the string "SENSOR". 
+	 * But it may be changed to the UUID of the sensor
+	 */
 	protected String eventName;
+	
+	/**
+	 * The UUID of the stream
+	 */
 	private String outputRoutingKey;
+	
+	/**
+	 * The Coordinate object that describes the sensor's location
+	 */
 	private Coordinate eventCoordinate;
 	
+	/**
+	 * The channel that will be used to publish on the events
+	 */
 	private Channel channel;
 	
-	// keeps the link between the name of the stream(eg: trafficDataSource) and
-	// the stream's  name that is used when it was defined in Esper
+	/**
+	 * HaspMap that keeps the link between the name of the stream(eg: trafficDataSource) and
+	 * the stream's  name that is used when it was defined in Esper
+	 */
 	private HashMap<String, String> inputNodesDetails = new HashMap<String, String>();
 
 
@@ -48,7 +73,7 @@ public abstract class EventDetectionNode {
 	 * @param eventDetectionLogicID is the ID of your node (eg: 1 2 3 ..etc)
 	 * @param eventType it's the type of node you are designing. Use a suggestive name for it eg: PublicParking or TrafficJamNode
 	 * @param eventName by convention it's set to "SENSOR"
-	 * @param channel the channel that will be used to send the detected events on.
+	 * @param outputRoutingKey the UUID of the stream
 	 */
 	public EventDetectionNode(String eventDetectionLogicID,
 			String eventType,
@@ -67,7 +92,7 @@ public abstract class EventDetectionNode {
 	 * Method used to start the nodes logic
 	 * 
 	 * @param epService the Esper object used
-	 * @return
+	 * @return no return type
 	 */
 	protected abstract EPServiceProvider getEventDetectionLogic(
 			EPServiceProvider epService);
@@ -102,6 +127,9 @@ public abstract class EventDetectionNode {
 	 */
 	protected void publishEvent(ContextualEvent event) {
 		
+		/**
+		 * The RDF message that was generated starting from the ContextualEvent received.
+		 */
 		String RDFModel = generateRDFModel(event);
 		
 		/*System.out.println();
@@ -198,7 +226,7 @@ public abstract class EventDetectionNode {
 	 * 
 	 * @param contextualEvent the object that holds the information you want to send to GDI
 	 */
-	public void sendEvent(ContextualEvent contextualEvent){
+	protected void sendEvent(ContextualEvent contextualEvent){
 		
 		publishEvent(contextualEvent);
 

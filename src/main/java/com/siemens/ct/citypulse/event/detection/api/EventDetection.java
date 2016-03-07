@@ -51,58 +51,89 @@ public class EventDetection {
 
 	private Channel dataBusChannel;
 
+	/**
+	 * GDI interface object
+	 */
 	private CpGdiInterface cp_GDI_Interface;
 
-	// key = the nodeID, and value = input hashMap (key = stream name, and value = UUID of stream)
+	/**
+	 * HashMap with key = the nodeID, and value = input hashMap (key = stream name, and value = UUID of stream)
+	 */
 	private HashMap<String, HashMap<String, String>> deployedEventDetectionNodeConnections = new HashMap<String, HashMap<String, String>>();
 	
-	// key = the nodeID, and value = input hashMap (key = stream name, and value = UUID of stream). FOR AGGREGATED
+	/**
+	 * HashMap with key = the nodeID, and value = input hashMap (key = stream name, and value = UUID of stream). FOR AGGREGATED
+	 */
 	private HashMap<String, HashMap<String, String>> deployedEventDetectionNodeConnectionsAggregated = new HashMap<String, HashMap<String, String>>();
 
-	// keeps track of the event detection modules which are deployed
+	/**
+	 * HashMap that keeps the link between the ID of the stream ID with
+	 * the event detection modules which are deployed. 
+	 */
 	private HashMap<String, EventDetectionNode> deployedEventDetectionLogic = new HashMap<String, EventDetectionNode>();
 	
-	// keeps track of the event detection modules which are deployed. FOR AGGREGATED
+	/**
+	 * HashMap that keeps the link between the ID of the stream ID with
+	 * the event detection modules which are deployed. FOR AGGREGATED
+	 */
 	private HashMap<String, EventDetectionNodeAggregated> deployedEventDetectionLogicAggregated = new HashMap<String, EventDetectionNodeAggregated>();
 
-	// the key represents the ID of the stream
-	// the value is represented by a list of EventDetectionLogicModules which
-	// are connected to the stream
+	/**
+	 * HashMap that links the key represents the ID of the stream with
+	 * the value is represented by a list of EventDetectionLogicModules which
+	 * are connected to the stream
+	 */
 	private HashMap<String, ArrayList<String>> streamBindingToEventDetectionLogicModules = new HashMap<String, ArrayList<String>>();
 	
-	// the key represents the ID of the stream
-	// the value is represented by a list of EventDetectionLogicModules which
-	// are connected to the stream. FOR AGGREGATED
+	/**
+	 * HashMap that links the key represents the ID of the stream with 
+	 * the value is represented by a list of EventDetectionLogicModules which
+	 * are connected to the stream. FOR AGGREGATED
+	 */
 	private HashMap<String, ArrayList<String>> streamBindingToEventDetectionLogicModulesAggregated = new HashMap<String, ArrayList<String>>();
 
-	// keeps the linking between routingKeys and instances of DataBusConnector
-	// key = routingKey, and value = instance of DataBusConnector
+	/**
+	 * HaspMap that keeps the linking between routingKeys and instances of DataBusConnector
+	 * key = routingKey, and value = instance of DataBusConnector
+	 */
 	private HashMap<String, DataBusConnector> dataBusConnectorLinker = new HashMap<String, DataBusConnector>();
 	
-	// keeps the linking between routingKeys and instances of DataBusConnector
-	// key = routingKey, and value = instance of DataBusConnector. FOR AGGREGATED
+	/**
+	 * HashMap that keeps the linking between routingKeys and instances of DataBusConnector
+	 * key = routingKey, and value = instance of DataBusConnector. FOR AGGREGATED
+	 */
 	private HashMap<String, DataBusConnector> dataBusConnectorLinkerAggregated = new HashMap<String, DataBusConnector>();
 
-	// keeps the link between the name of the stream(eg: trafficDataSource) and
-	// the stream's name that is used when it was defined in
-	// Esper
+	/**
+	 * HashMap that keeps the link between the name of the stream(eg: trafficDataSource) and
+	 * the stream's name that is used when it was defined in Esper
+	 */
 	private HashMap<String, String> InputNodesDetails = new HashMap<String, String>();
 	
-	// keeps the link between the name of the stream(eg: trafficDataSource) and
-	// the stream's name that is used when it was defined in
-	// Esper. FOR AGGREGATED
+	/**
+	 * HashMap that keeps the link between the name of the stream(eg: trafficDataSource) and
+	 * the stream's name that is used when it was defined in Esper. FOR AGGREGATED
+	 */
 	private HashMap<String, String> InputNodesDetailsAggregated = new HashMap<String, String>();
 
-	// HashMap that links the UUID and the name of the stream in Esper
+	/**
+	 * HashMap that links the UUID and the name of the stream in Esper
+	 */
 	private HashMap<String, String> UUIDAndEsperNameLinker = new HashMap<String, String>();
 	
-	// HashMap that links the UUID and the name of the stream in Esper. FOR AGGREGATED
+	/**
+	 * HashMap that links the UUID and the name of the stream in Esper. FOR AGGREGATED
+	 */
 	private HashMap<String, String> UUIDAndEsperNameLinkerAggregated = new HashMap<String, String>();
-
-	// holds all the IDs of the nodes added
+	
+	/**
+	 * ArrayList that holds all the IDs of the nodes added
+	 */
 	private ArrayList<String> listOfNodeIDs = new ArrayList<String>();
 	
-	// holds all the IDs of the aggregated nodes added. FOR AGGREGATED
+	/**
+	 * ArrayList that holds all the IDs of the aggregated nodes added. FOR AGGREGATED
+	 */
 	private ArrayList<String> listOfNodeIDsAggregated = new ArrayList<String>();
 	
 	//parameters used to set-up the AMQP bus to publish events on to GDI
@@ -113,7 +144,6 @@ public class EventDetection {
 
 	/**
 	 * Method used to initialize the CEP engine, connections to the data bus and GDI
-	 * 
 	 */
 	public EventDetection() {
 		startCEPEngine();
@@ -305,6 +335,7 @@ public class EventDetection {
 	}
 	
 	/**
+	 * Method that adds a new event detection node.
 	 * Complex method that checks if the node we want to add was added before, if not it will check to see if its streams exist in inputMap
 	 * if they do, we put the new node in a HashMap with the key - it's logic ID and value - the new node.
 	 * We then pass through each UUID described in the inputMapping: if the stream is already used by another node, we update the HashMap with key - the stream UUID
@@ -400,6 +431,7 @@ public class EventDetection {
 	}
 
 	/**
+	 * Method that adds a new event detection node for aggregated messages.
 	 * Complex method that checks if the node we want to add was added before, if not it will check to see if its streams exist in inputMap
 	 * if they do, we put the new node in a HashMap with the key - it's logic ID and value - the new node.
 	 * We then pass through each UUID described in the inputMapping: if the stream is already used by another node, we update the HashMap with key - the stream UUID
@@ -459,7 +491,8 @@ public class EventDetection {
 
 					streamBindingToEventDetectionLogicModulesAggregated.put(inputStreamUUID, list);
 					
-					//we use the method connectNewStreamToTheEventDetection to connect the new stream		
+					// we use the method connectNewStreamToTheEventDetection to connect the new stream
+					// we also send it the exchange type (aggregated or annotated)
 					connectNewStreamToTheEventDetection(inputStreamUUID,Commons.AGGREGATED_DATA_EXCHANGE);
 
 				}
@@ -502,7 +535,7 @@ public class EventDetection {
 	 * @param inputStreamUUID is the UUID of the stream we want to connect 
 	 * @param exchange the name of the exchange to connect to
 	 */
-	public void connectNewStreamToTheEventDetection(String inputStreamUUID, String exchange) {
+	private void connectNewStreamToTheEventDetection(String inputStreamUUID, String exchange) {
 
 		StreamDetails streamDetails = new StreamDetails(inputStreamUUID);
 		streamDetails.computeStreamDetails();
@@ -539,24 +572,11 @@ public class EventDetection {
 			
 			logger.info("Succesfully connected new stream to ED, with UUID: "+inputStreamUUID);
 		}
+		else
+		{
+			logger.error("Problems computing StreamDetails from UUID: "+inputStreamUUID);
+		}
 		
-	}
-
-	/**
-	 * Method used to remove a stream from the bus.
-	 * 
-	 * @param inputStreamUUID is the UUID of the stream we want to remove/disconnect 
-	 */
-	private void disconnectNewStreamToTheEventDetection(String inputStreamUUID) {
-
-		DataBusConnector dataBusConnector = dataBusConnectorLinker.get(inputStreamUUID);
-		dataBusConnector.disconnectInputAdapter();
-		
-		dataBusConnector = dataBusConnectorLinkerAggregated.get(inputStreamUUID);
-		dataBusConnector.disconnectInputAdapter();
-		
-		logger.info("Removed stream from ED, with UUID: "+inputStreamUUID);
-
 	}
 	
 	/**
@@ -592,7 +612,7 @@ public class EventDetection {
 	 */
 	private void addNewEventStreamToGDIAggregated(EventDetectionNodeAggregated eventDetectionNodeAggregated) {
 
-		//generating a random unique UUID
+		// generating a random unique UUID
 		UUID x = UUID.randomUUID();
 
 		try {
@@ -654,19 +674,47 @@ public class EventDetection {
 			
 			if (streamBindingToEventDetectionLogicModulesAggregated.containsKey(inputStreamUUID)) {
 
-				//list of all nodes connected to that particular stream
+				// list of all nodes connected to that particular stream
 				list = streamBindingToEventDetectionLogicModulesAggregated.get(inputStreamUUID);
 				list.remove(eventDetectionNodeID);
-				//if the list is empty after the node is removed, that means the stream is no longer needed, so we disconnect it.
+				// if the list is empty after the node is removed, that means the stream is no longer needed, so we disconnect it.
 				if (list.isEmpty()) {
 					streamBindingToEventDetectionLogicModulesAggregated.remove(inputStreamUUID);
-					disconnectNewStreamToTheEventDetection(inputStreamUUID);
+					disconnectNewStreamToTheEventDetectionAggregated(inputStreamUUID);
 				}
 			}
 			
 		}
 		
 		logger.info("Removed the node: "+eventDetectionNodeID);
+	}
+	
+	/**
+	 * Method used to remove an annotated stream from the bus.
+	 * 
+	 * @param inputStreamUUID is the UUID of the stream we want to remove/disconnect 
+	 */
+	private void disconnectNewStreamToTheEventDetection(String inputStreamUUID) {
+
+		DataBusConnector dataBusConnector = dataBusConnectorLinker.get(inputStreamUUID);
+		dataBusConnector.disconnectInputAdapter();
+		
+		logger.info("Removed annotated stream from ED, with UUID: "+inputStreamUUID);
+
+	}
+	
+	/**
+	 * Method used to remove an aggregated stream from the bus.
+	 * 
+	 * @param inputStreamUUID is the UUID of the stream we want to remove/disconnect 
+	 */
+	private void disconnectNewStreamToTheEventDetectionAggregated(String inputStreamUUID) {
+		
+		DataBusConnector dataBusConnector = dataBusConnectorLinkerAggregated.get(inputStreamUUID);
+		dataBusConnector.disconnectInputAdapter();
+		
+		logger.info("Removed aggregated stream from ED, with UUID: "+inputStreamUUID);
+
 	}
 
 }

@@ -11,7 +11,6 @@ public class Commons {
 	public final static String AARHUS_PARKING_UUIDs = "/UUID_and_coordinates_Parking.txt";
 	public final static String GET_DESCRIPTION_URL = "http://#//api/get_description?uuid=";
 	public final static String EVENTS_EXCHANGE = "events";
-	public final static String GDI_AMQP_URI = "amqp://guest:guest@131.227.92.55:8007";
 	
 	//configuration parameters
 	public static String resourceManagerConnectorIP = Utils.loadConfigurationProp("resourceManagerConnectorIP");
@@ -21,4 +20,6 @@ public class Commons {
 	public static String GDIhostname = Utils.loadConfigurationProp("GDIhostname");
 	public static int GDIport = Integer.parseInt(Utils.loadConfigurationProp("GDIport"));
 	public static boolean testParameter = Boolean.parseBoolean(Utils.loadConfigurationProp("testParameter"));
+	public static String GDI_AMQP_URI = Utils.loadConfigurationProp("GDI_AMQP_URI");
+	
 }

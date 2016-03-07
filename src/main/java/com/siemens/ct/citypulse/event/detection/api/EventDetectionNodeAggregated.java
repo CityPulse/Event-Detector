@@ -27,17 +27,41 @@ public abstract class EventDetectionNodeAggregated {
 
 	Logger logger = Logger.getLogger(EventDetectionNodeAggregated.class);
 
+	/**
+	 * The ID of the stream that was added in the MainClass.class
+	 */
 	private String eventDetectionLogicID;
+	
+	/**
+	 * The type of event. Eg: TrafficJam , PublicParking
+	 */
 	protected String eventType;
+	
+	/**
+	 * The name of the event. It was discusses upon the string "SENSOR". 
+	 * But it may be changed to the UUID of the sensor
+	 */
 	protected String eventName;
-	//private String outputConnectionBus;
+	
+	/**
+	 * The UUID of the stream
+	 */
 	private String outputRoutingKey;
+	
+	/**
+	 * The Coordinate object that describes the sensor's location
+	 */
 	private Coordinate eventCoordinate;
 	
+	/**
+	 * The channel that will be used to publish on the events
+	 */
 	private Channel channel;
 	
-	// keeps the link between the name of the stream(eg: trafficDataSource) and
-	// the stream's  name that is used when it was defined in Esper
+	/**
+	 * HaspMap that keeps the link between the name of the stream(eg: trafficDataSource) and
+	 * the stream's  name that is used when it was defined in Esper
+	 */
 	private HashMap<String, String> inputNodesDetails = new HashMap<String, String>();
 
 
