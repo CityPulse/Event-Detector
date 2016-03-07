@@ -20,6 +20,8 @@ The component has a configuration file named config.properties that holds the co
 * Resource Manager Configuration parameters: IP and Port.
 * The Data bus Configuration parameters: IP and Port.
 * Geo-spatial data base Configuration parameters: IP and Port.
+* Testing mode parameter: testParameter (Boolean type).
+* The URI for GDI parameter: GDI_AMQP_URI.
 
 The configuration file can be found in /resources within the .jar file and can be modified easily. 
 
