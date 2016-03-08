@@ -141,9 +141,13 @@ public abstract class EventDetectionNode {
 			System.out.println("Annotated event send on \"events\" data bus for: "+event.getCeType() + " with UUID: "+outputRoutingKey);
 			
 			channel.exchangeDeclare(Commons.EVENTS_EXCHANGE, "topic");
-						
+			
+			//added 10 minutes TTL for messages
+			AMQP.BasicProperties.Builder properties = new AMQP.BasicProperties().builder();
+			properties.expiration("600000");
+			
 			channel.basicPublish(Commons.EVENTS_EXCHANGE, outputRoutingKey,
-					new AMQP.BasicProperties().builder().build(),
+					properties.build(),
 					RDFModel.getBytes());
 			logger.info(event.getCeType() + " event published on bus with level: "+event.getCeLevel());
 						
