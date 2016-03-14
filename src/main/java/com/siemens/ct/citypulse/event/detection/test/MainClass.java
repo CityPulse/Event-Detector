@@ -40,27 +40,28 @@ public class MainClass {
 					String lon = coordinates.substring(0, coordinates.indexOf(" "));
 					String lat = coordinates.substring(coordinates.indexOf(" ")+1, coordinates.length() );
 					
+					// eventDetectionLogicInputMapping hashmap nume (trafficDataSource) + UUID
+					HashMap<String, String> UUID_NAME_1 = new HashMap<String, String>();
+					UUID_NAME_1.put("trafficDataSource", UUID);
+					
+					HashMap<String, String> UUID_NAME_2 = new HashMap<String, String>();
+					UUID_NAME_2.put("aarhusPollution", UUID);
+					
 					
 					// trafficJamEventDetectionNode object
 					TrafficJamEventDetectionNode trafficJamNode_1 = new TrafficJamEventDetectionNode(i + "", "TrafficJam",
-							"SENSOR", UUID, "35", "10", "24");
-					
-					//TrafficJamEventDetectionNodeAggregated trafficJamNode_1_aggregated = new TrafficJamEventDetectionNodeAggregated(i + "", "TrafficJam",
-						//	"SENSOR", UUID, "35", "10", "24");
+							UUID, UUID, "35", "10", "24");
+					AarhusPollutionEventDetectionNode aarhusPollutionNode = new AarhusPollutionEventDetectionNode(
+							i + "_aarhusPollution", "AarhusPollution", UUID, UUID, "10", "25");
 					
 					//setting the coordinates
 					Coordinate coordinate = new Coordinate(Double.parseDouble(lon), Double.parseDouble(lat));
 					trafficJamNode_1.setEventCoordinate(coordinate);
+					aarhusPollutionNode.setEventCoordinate(coordinate);
 					
-					//trafficJamNode_1_aggregated.setEventCoordinate(coordinate);
-
-					// eventDetectionLogicInputMapping hashmap nume (trafficDataSource) + UUID
-					HashMap<String, String> UUID_NAME_1 = new HashMap<String, String>();
-					UUID_NAME_1.put("trafficDataSource", UUID);
-
 					//adding the node to ED
 					eventDetection.addEventDetectionNode(UUID_NAME_1, trafficJamNode_1);
-					//eventDetection.addEventDetectionNodeAggregated(UUID_NAME_1, trafficJamNode_1_aggregated);
+					eventDetection.addEventDetectionNode(UUID_NAME_2, aarhusPollutionNode);
 					
 					i++;
 					System.out.println("Added "+i+" traffic sensors.");
@@ -88,22 +89,17 @@ public class MainClass {
 				String lon = coordinates.substring(0, coordinates.indexOf(" "));
 				String lat = coordinates.substring(coordinates.indexOf(" ")+1, coordinates.length() );
 				
+				// hashmap uuid + nume (parkingGarageData)
+				HashMap<String, String> UUID_NAME_2 = new HashMap<String, String>();
+				UUID_NAME_2.put("parkingGarageData", UUID);
+				
 				// parkingEventDetectionNode object
 				ParkingEventDetectionNode parking_1 = new ParkingEventDetectionNode(j + i + "", "PublicParking", "SENSOR",
 					UUID, "0.9", "1", "30");
 				
-				//ParkingEventDetectionNodeAggregated parking_1_aggregated = new ParkingEventDetectionNodeAggregated(j + i + "", "PublicParking", "SENSOR",
-					//	UUID, "0.9", "1", "30");
-				
 				// setting the coordinates
 				Coordinate coordinate = new Coordinate(Double.parseDouble(lon), Double.parseDouble(lat));
 				parking_1.setEventCoordinate(coordinate);
-				
-				//parking_1_aggregated.setEventCoordinate(coordinate);
-
-				// hashmap uuid + nume (parkingGarageData)
-				HashMap<String, String> UUID_NAME_2 = new HashMap<String, String>();
-				UUID_NAME_2.put("parkingGarageData", UUID);
 
 				//adding the node to ED
 				eventDetection.addEventDetectionNode(UUID_NAME_2, parking_1);
@@ -125,5 +121,12 @@ public class MainClass {
 		{
 			eventDetection.sendFakeData();
 		}
+	}
+
+	private static String getEventName(HashMap<String, String> uuidHashMap) {
+		
+		//TO DO: Gen eventName string ec (SENSOR_UUID1_UUID2..))
+		
+		return null;
 	}
 }
