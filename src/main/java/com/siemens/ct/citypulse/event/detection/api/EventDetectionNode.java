@@ -136,22 +136,19 @@ public abstract class EventDetectionNode {
 		System.out.println(event);
 		System.out.println();*/
 
+		System.out.println("Annotated event, with level: " + event.getCeLevel() + ", send on \"events\" data bus for: " + event.getCeType() + " with routingKey: " + event.getCeName());
+		
 		try {
-			
-			System.out.println("Annotated event send on \"events\" data bus for: "+event.getCeType() + " with UUID: "+outputRoutingKey);
-			
 			channel.exchangeDeclare(Commons.EVENTS_EXCHANGE, "topic");
-			
-			//added 10 minutes TTL for messages
+
+			// added 10 minutes TTL for messages
 			AMQP.BasicProperties.Builder properties = new AMQP.BasicProperties().builder();
 			properties.expiration("600000");
-			
-			channel.basicPublish(Commons.EVENTS_EXCHANGE, outputRoutingKey,
-					properties.build(),
-					RDFModel.getBytes());
-			logger.info(event.getCeType() + " event published on bus with level: "+event.getCeLevel());
-						
-		} catch (IOException e) {
+
+			channel.basicPublish(Commons.EVENTS_EXCHANGE, outputRoutingKey, properties.build(), RDFModel.getBytes());
+			logger.info(event.getCeType() + " event published on bus with level: " + event.getCeLevel());
+		}
+		catch (IOException e) {
 			logger.error("Error publishing an event on the databus for the sensor with UUID: "+outputRoutingKey, e);
 		}
 	}
