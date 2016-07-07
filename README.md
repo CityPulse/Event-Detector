@@ -4,7 +4,7 @@ The Event detection component provides the generic tools for processing the anno
 
 Figure 1 depicts the architecture of the proposed framework which allows event detection for sensory data streams. It provides a set of generic tools which can be used for detecting an event. In order to detect a certain event, the domain expert, has to deploy a piece of code called event detection node. These nodes contain the event detection logic, which represent the pattern that has to be identiﬁed during raw data processing.
 
--> ![alt tag](https://github.com/CityPulse/EventDetection/blob/master/ED_arhitecture.png "Title") <-
+<center> ![alt tag](https://github.com/CityPulse/EventDetection/blob/master/ED_arhitecture.png "Title") </center>
 -> Figure 1 Event detection component main blocks and the dependent components. <-
 
 A domain expert, with some help from an application developer, can use two conﬁguration interfaces displayed by the framework in order to perform the following activities:
