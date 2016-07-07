@@ -10,7 +10,7 @@ A domain expert, with some help from an application developer, can use two con�
 *	Register the data streams from the city by providing their descriptions;
 *	Develop the event detection nodes on a design time phase;
 *	Deploy the event detection nodes for various stream combinations.
-*	
+	
 Within the CityPulse project life time a suit of event detection nodes have been developed (e.g. traffic jam detection, parking garages status changed detection). The application developer can, at any time, trigger the deployment of these mechanisms in order to analyse the data coming from the considered city. In addition to that these, the application developer, by implementing a java interface, can develop custom made event detection logic.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
@@ -36,12 +36,12 @@ The configuration file can be found in /resources within the .jar file and can b
 
 ## API method description, parameters and response
 
-In the main method, the first thing to do is create e new EventDetection object. By doing this you will initialize Esper, GDI, connect to the message bus from where you get the aggregates/annotated messages and to the message bus used to send the newly detected events to GDI.
+In the main method, the first thing to do is create e new *EventDetection* object. By doing this you will initialize Esper, GDI, connect to the message bus from where you get the aggregates/annotated messages and to the message bus used to send the newly detected events to GDI.
 
-Then we need to create a new class that extends *EventDetectionNode* (let us say it is named ParkingEventDetectionNode) and initialize it in the main method you just created earlier, with the required parameters (plus the thresholds). Then, again in the main method, create a Coordinate object where you set the coordinates of the sensor. Then use the method setEventCoordinate on the ParkingEventDetectionNode object. You will also create a HashMap containing as key the UUID of the stream and as value the stream’s name (eg: parkingGarageData) the same name you used when creating your custom node (in the method getListOfInputStreamNames() ).
+Then we need to create a new class that extends *EventDetectionNode* (let us say it is named *ParkingEventDetectionNode*) and initialize it in the main method you just created earlier, with the required parameters (plus the thresholds). Then, again in the main method, create a Coordinate object where you set the coordinates of the sensor. Then use the method *setEventCoordinate* on the *ParkingEventDetectionNode* object. You will also create a HashMap containing as key the UUID of the stream and as value the stream’s name (eg: *parkingGarageData*) the same name you used when creating your custom node (in the method *getListOfInputStreamNames()* ).
 
-Then simply add the new custom node object to EventDetection using the method addEventDetectionNode().
-And that’s about it. In your custom node class ParkingEventDetectionNode in the method getEventDetectionLogic(EPServiceProvider epService) write all your Esper queries. When you get your desired event, simply create a ContextualEvent object with the required parameters and use the method sendEvent to send your ContextualEvent to GDI.
+Then simply add the new custom node object to *EventDetection* using the method *addEventDetectionNode()*.
+And that’s about it. In your custom node class *ParkingEventDetectionNode* in the method *getEventDetectionLogic(EPServiceProvider epService)* write all your Esper queries. When you get your desired event, simply create a *ContextualEvent* object with the required parameters and use the method *sendEvent* to send your *ContextualEvent* to GDI.
 
 
 ## Methods
