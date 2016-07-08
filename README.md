@@ -53,8 +53,11 @@ The java project and the documentations can be found on Github: https://github.c
 
 ## Contributers
 
-The Event Detection component was developed as part of the EU project CityPulse. The consortium member Siemens provided the main contributions for this component.
+The Event Detection component was developed as part of the EU project CityPulse. The consortium member SIEMENS Corporate Technology Romania provided the main contributions for this component.
 
+CityPulse: http://www.ict-citypulse.eu/
+
+SIEMENS Corporate Technology Romania: http://www.siemens.ro
 
 ## Authors
 
