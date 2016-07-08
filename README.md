@@ -51,6 +51,11 @@ And that’s about it. In your custom node class *ParkingEventDetectionNode* in 
 The java project and the documentations can be found on Github: https://github.com/CityPulse/EventDetection . 
 
 
+## Contributers
+
+The GDI component was developed as part of the EU project CityPulse. The consortium member Siemens provided the main contributions for this component.
+
+
 ## Authors
 
 * **Serbanescu Bogdan Victor** - (https://github.com/sherbibv)
