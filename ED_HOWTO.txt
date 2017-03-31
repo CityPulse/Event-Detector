@@ -1,0 +1,10 @@
+After downloading the project you need to add a jar so that the project works
+
+CityPulseGDI-1.0.0.jar
+
+you will have to manually add it to your Maven repository bu executting this command:
+
+mvn deploy:deploy-file -Durl=file:///Users/[YOUR_USER_NAME_HERE]/.m2/repository/ -Dfile=CityPulseGDI.jar -DgroupId=citypulse -DartifactId=CityPulseGDI -Dpackaging=jar -Dversion=1.0.0
+
+You now can build the app. In order to deploy on server, you will need to unrar the .bin file and copy-paste its contents on the server. Then navigate to event.detection-0.0.3/lib/ and run the event.detection-0.0.3.jar with hava -jar (you should use nohup to make it persistent)
+
