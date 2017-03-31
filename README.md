@@ -33,6 +33,7 @@ The Event Detection component is packed in a .jar file. To be used it has to be 
 * Geo-spatial data base Configuration parameters: IP and Port.
 * Testing mode parameter: testParameter (Boolean type).
 * The URI for GDI parameter: GDI_AMQP_URI.
+* The SPARQL endpoint URL: SPARQL_ENDPOINT.
 
 The configuration file can be found in /resources within the .jar file and can be modified easily. 
 
