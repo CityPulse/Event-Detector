@@ -9,8 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.rdf.model.Model;
@@ -162,7 +164,7 @@ public class EventDetection {
 			
 			dataBusChannel.exchangeDeclare(Commons.EVENTS_EXCHANGE, "topic");
 			
-			System.out.println("Published fake data - traffic");
+			/*System.out.println("Published fake data - traffic");
 			
 			ContextualEvent trafficEvent = new ContextualEvent("TrafficJam", "SENSOR", System.currentTimeMillis(),
 					new Coordinate(10.218501513474507,56.19013109480471), 1);
@@ -175,13 +177,13 @@ public class EventDetection {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {
-				logger.error("The thread was interrupted while in event injecting sention. " , e);
-			}
+				logger.error("The thread was interrupted while in event injecting session. " , e);
+			}*/
 			
-			System.out.println("Published fake data - parking");
+			System.out.println("Published fake data - traffic jam");
 			
-			ContextualEvent parkingEvent = new ContextualEvent("PublicParking", "SENSOR", System.currentTimeMillis(),
-					new Coordinate(10.21284,56.16184), 2);
+			ContextualEvent parkingEvent = new ContextualEvent("TrafficJam", "SENSOR_80043a6c-3bdb-5e47-9199-151fb8cfd619", System.currentTimeMillis(),
+					new Coordinate(10.218501513474507,56.19013109480471), 1);
 			String RDFModelParking =  generateRDFModel(parkingEvent);
 			
 			dataBusChannel.basicPublish(Commons.EVENTS_EXCHANGE, "80043a6c-3bdb-5e47-9199-151fb8cfd619",
@@ -263,6 +265,8 @@ public class EventDetection {
 	 */
 	private void connectToDataBusForGDI() {
 		
+		String queueName = Commons.EVENTS_QUEUE;
+		
 		try {
 			factory = new ConnectionFactory();
 			try {
@@ -275,8 +279,23 @@ public class EventDetection {
 				logger.error("Problems connecting to URI: amqp://guest:guest@131.227.92.55:8007. " , e);
 			}
 
-			transmisingConnection = factory.newConnection();
+			try {
+				transmisingConnection = factory.newConnection();
+			} catch (TimeoutException e) {
+				
+				e.printStackTrace();
+			}
+			
 			transmisingChannel = transmisingConnection.createChannel();
+			
+			//setting the TTL of the queue
+			Map<String, Object> args = new HashMap<String, Object>();
+			args.put("x-message-ttl", 600000);
+			
+			transmisingChannel.exchangeDeclare(Commons.EVENTS_EXCHANGE, "topic",  false, false, false, null);
+			transmisingChannel.queueDeclare(queueName, false, false, false, args);
+			transmisingChannel.queueBind(queueName, Commons.EVENTS_EXCHANGE, "#");
+			
 			
 		} catch (IOException e) {
 			logger.error("Problems creating new connection factory for GDI connection via AMQP. " , e);
@@ -326,7 +345,13 @@ public class EventDetection {
 		factory.setPort(dataBusPort);
 
 		try {
-			Connection connection = factory.newConnection();
+			Connection connection = null;
+			try {
+				connection = factory.newConnection();
+			} catch (TimeoutException e) {
+				
+				e.printStackTrace();
+			}
 			dataBusChannel = connection.createChannel();
 
 		} catch (IOException e) {
@@ -360,7 +385,6 @@ public class EventDetection {
 
 			for (String key : inputStreamNames) {
 				if (!eventDetectionLogicInputMaping.containsKey(key)) {
-					System.out.println("B");
 					logger.info("Error while deploying event detection logic with the name "
 							+ eventDetectionNode.getEventDetectionLogicID());
 					logger.info("      The input map must contain the following keys: " + inputStreamNames);
@@ -541,7 +565,7 @@ public class EventDetection {
 		streamDetails.computeStreamDetails();
 		
 		if (streamDetails.isValid()) {
-			
+			//System.out.println("Este Valid");
 			if(exchange.equals(Commons.ANNOTATED_DATA_EXCHANGE))
 			{
 				//System.out.println("BB");
@@ -574,6 +598,7 @@ public class EventDetection {
 		}
 		else
 		{
+			//System.out.println("NU ESTE VALID");
 			logger.error("Problems computing StreamDetails from UUID: "+inputStreamUUID);
 		}
 		

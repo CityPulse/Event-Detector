@@ -1,6 +1,7 @@
 package com.siemens.ct.citypulse.event.detection.test;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
@@ -16,6 +17,9 @@ public class TrafficJamEventDetectionNode extends EventDetectionNode {
 	private String averageSpeedThreshold;
 	private String streetVehicleCountThreshold;
 	private String timeIntervalThreshold;
+	
+	private int currentEventLevel = 0;
+	private String eventID;
 
 	private String nameOfStreamInEsper;
 
@@ -38,9 +42,9 @@ public class TrafficJamEventDetectionNode extends EventDetectionNode {
 	}
 
 	@Override
-	public EPServiceProvider getEventDetectionLogic(EPServiceProvider epService) {
+	public void getEventDetectionLogic(EPServiceProvider epService) {
 
-		System.out.println("\nTraffic Annotated\n");
+		//System.out.println("\nTraffic Annotated");
 		
 		nameOfStreamInEsper = getSensorStreamNameforInputName("trafficDataSource");
 
@@ -75,15 +79,24 @@ public class TrafficJamEventDetectionNode extends EventDetectionNode {
 		expression = "insert into " + getUniqueStreamID("TrafficJamStream") + " select * from pattern [every "
 				+ getUniqueStreamID("TrafficCongestionStream") + " -> (timer:interval(" + timeIntervalThreshold + " sec) and not "
 				+ getUniqueStreamID("NonTrafficCongestionStream") + ")]";
-
+		
 		statement = epService.getEPAdministrator().createEPL(expression);
 
 		statement.addListener(new UpdateListener() {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
 
-				ContextualEvent trafficEvent = new ContextualEvent(eventType, eventName, System.currentTimeMillis(),
-						getEventCoordinate(), 1);
+				// if this is the start of a traffic jam incident (currentEventLevel is equal to 0), then set a eventID
+				// this event ID will remain the same until the end of the traffic jam event (currentEventLevel becomes 0 again)
+				if(currentEventLevel==0)
+				{
+					eventID = UUID.randomUUID().toString();
+				}
+				
+				currentEventLevel = 1;
+
+				ContextualEvent trafficEvent = new ContextualEvent(eventID, eventType, eventName, System.currentTimeMillis(),
+						getEventCoordinate(), currentEventLevel);
 				sendEvent(trafficEvent);
 
 			}
@@ -99,15 +112,16 @@ public class TrafficJamEventDetectionNode extends EventDetectionNode {
 		statement.addListener(new UpdateListener() {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
-
-				ContextualEvent trafficEvent = new ContextualEvent(eventType, eventName, System.currentTimeMillis(),
-						getEventCoordinate(), 0);
+			
+				currentEventLevel = 0;
+				
+				ContextualEvent trafficEvent = new ContextualEvent(eventID, eventType, eventName, System.currentTimeMillis(),
+						getEventCoordinate(), currentEventLevel);
 				sendEvent(trafficEvent);
 
 			}
 		});
 
-		return null;
 	}
 
 }

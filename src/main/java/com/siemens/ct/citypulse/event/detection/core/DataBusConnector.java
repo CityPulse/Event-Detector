@@ -55,16 +55,12 @@ public class DataBusConnector extends DefaultConsumer {
 				streamDetails.getStreamDescription().getData().getMessagebus().getRoutingKey().replace(".", "_")+"_"+exchange,
 				streamDetails.getMapDef());
 
+		
 		logger.info("Registerd event type to esper:"
 				+ streamDetails.getStreamDescription().getData().getMessagebus().getRoutingKey());
-		
-		String queueName;
-		
-		//System.out.println("Connected to messageBus on exchange: " + exchange);
-		
+				
 		try {
-			queueName = dataBusChannel.queueDeclare().getQueue();
-			
+			String queueName = dataBusChannel.queueDeclare().getQueue();
 			dataBusChannel.queueBind(queueName, exchange, streamDetails.getStreamDescription().getData().getMessagebus().getRoutingKey());
 			channelTag = dataBusChannel.basicConsume(queueName, false, this);
 		} catch (IOException e) {
@@ -86,42 +82,51 @@ public class DataBusConnector extends DefaultConsumer {
 		
 		try {
 			dataMessage = new String(body, "UTF-8");
+			/*System.out.println("===");
+			System.out.println(dataMessage);
+			System.out.println("===");*/
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Error because the encoding was not supported: ", e);
+			logger.error("Error due to unsupported encoding while parsing observation: ", e);
 		}
-	
-		//System.out.println("message arrived");
 		
 		if(exchange.equals(Commons.ANNOTATED_DATA_EXCHANGE))
 		{
-			//System.out.println("Mesaj ANNOTAT pentru UUID : "+streamDetails.getStreamDescription().getData().getMessagebus().getRoutingKey());
 			//getting the values from annotated data
 			annotatedMapValues = ObservationUtils.deserializeRDFfromAnnotatedMessage(dataMessage, streamDetails.getDataFieldsNames(),
 					streamDetails.getMapDef());
-			//System.out.println(annotatedMapValues);
+			//System.out.println(annotatedMapValues+ " for "+streamDetails.getStreamDescription().getData().getMessagebus().getRoutingKey() );
 			
 			//if all the fields have a value != null, then we can apply the CEP logic
 			if(!annotatedMapValues.containsValue(null))
 			{
+				//System.out.println("annotatedMapValues routingKey: "+streamDetails.getStreamDescription().getData().getSensorID()+" : "+annotatedMapValues);
 				epService.getEPRuntime().sendEvent(annotatedMapValues,
 						streamDetails.getStreamDescription().getData().getMessagebus().getRoutingKey().replace(".", "_")+"_"+exchange);
+			}
+			try {
+				dataBusChannel.basicAck(envelope.getDeliveryTag(), false);
+			} catch (IOException e) {
+				logger.error("Error while trying to acknoledge the message recieved from the data bus", e);
 			}
 		}
 		if(exchange.equals(Commons.AGGREGATED_DATA_EXCHANGE))
 		{	
-			//System.out.println("Mesaj AGGREGAT pentru UUID : "+streamDetails.getStreamDescription().getData().getMessagebus().getRoutingKey());
 			//Updating data from aggregated data message
 			aggregatedMapValues = ObservationUtils.deserializeRDFfromAggregatedMessage(dataMessage, streamDetails.getDataFieldsNames(),
 					streamDetails.getMapDef(), aggregatedMapValues);
-			//System.out.println(aggregatedMapValues);
 	
 			//if all the fields have a value != null, then we can apply the CEP logic
 			if(!aggregatedMapValues.containsValue(null))
 			{
-				System.out.println("All fields of aggregated map != null");
+				//System.out.println("All fields of aggregated map != null");
 				epService.getEPRuntime().sendEvent(aggregatedMapValues,
 						streamDetails.getStreamDescription().getData().getMessagebus().getRoutingKey().replace(".", "_")+"_"+exchange);
 			}			
+			try {
+				dataBusChannel.basicAck(envelope.getDeliveryTag(), false);
+			} catch (IOException e) {
+				logger.error("Error while trying to acknoledge the message recieved from the data bus", e);
+			}
 		}
 
 	}
@@ -144,10 +149,6 @@ public class DataBusConnector extends DefaultConsumer {
 			logger.error("Error while cancelling the consumer with channelTag: "+channelTag, e);
 		}
 
-	}
-	
-	public StreamDetails getStreamDetails() {
-		return streamDetails;
 	}
 
 }

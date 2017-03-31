@@ -133,7 +133,7 @@ public class StreamDetails {
 				+ "}";
 
 		// sparql request
-		String SPARQL_endpoint = "http://131.227.92.55:8011/sparql/";
+		String SPARQL_endpoint = Commons.SPARQL_ENDPOINT;
 
 		QueryExecution x = QueryExecutionFactory.sparqlService(SPARQL_endpoint, query_SPARQL);
 		ResultSet results = x.execSelect();

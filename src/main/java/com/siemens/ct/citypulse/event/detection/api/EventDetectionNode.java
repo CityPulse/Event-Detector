@@ -72,7 +72,7 @@ public abstract class EventDetectionNode {
 	 * 
 	 * @param eventDetectionLogicID is the ID of your node (eg: 1 2 3 ..etc)
 	 * @param eventType it's the type of node you are designing. Use a suggestive name for it eg: PublicParking or TrafficJamNode
-	 * @param eventName by convention it's set to "SENSOR"
+	 * @param eventName by convention it's set to "SENSOR_list of uuids"
 	 * @param outputRoutingKey the UUID of the stream
 	 */
 	public EventDetectionNode(String eventDetectionLogicID,
@@ -92,9 +92,8 @@ public abstract class EventDetectionNode {
 	 * Method used to start the nodes logic
 	 * 
 	 * @param epService the Esper object used
-	 * @return no return type
 	 */
-	protected abstract EPServiceProvider getEventDetectionLogic(
+	protected abstract void getEventDetectionLogic(
 			EPServiceProvider epService);
 	
 	
@@ -108,7 +107,7 @@ public abstract class EventDetectionNode {
 	 * @param baseStreamID
 	 *            the name of the stream you plan on using as a base in Esper
 	 *            queries eg: ParkingGarageStatusStream
-	 * @return a string formad by concatenating the baseStreamID, the
+	 * @return a string formed by concatenating the baseStreamID, the
 	 *         eventDetectionLogicID and "_ANNOTATED" for annotated streams and
 	 *         "_AGGREGATED" for aggregated streams
 	 */
@@ -136,21 +135,19 @@ public abstract class EventDetectionNode {
 		System.out.println(event);
 		System.out.println();*/
 
-		System.out.println("Annotated event, with level: " + event.getCeLevel() + ", send on \"events\" data bus for: " + event.getCeType() + " with routingKey: " + event.getCeName());
+		System.out.println("[ANNOTATED EVENT] at "+System.currentTimeMillis()+" | eventID: "+event.getCeID()+" Level: " + event.getCeLevel() + ", send on \"events\" data bus for: " + event.getCeType() + " with routingKey: " + event.getCeName());
+		
+		// added 10 minutes TTL for messages
+		AMQP.BasicProperties.Builder properties = new AMQP.BasicProperties().builder();
+		properties.expiration("60000");
 		
 		try {
-			channel.exchangeDeclare(Commons.EVENTS_EXCHANGE, "topic");
-
-			// added 10 minutes TTL for messages
-			AMQP.BasicProperties.Builder properties = new AMQP.BasicProperties().builder();
-			properties.expiration("600000");
-
 			channel.basicPublish(Commons.EVENTS_EXCHANGE, outputRoutingKey, properties.build(), RDFModel.getBytes());
-			logger.info(event.getCeType() + " event published on bus with level: " + event.getCeLevel());
+		} catch (IOException e) {
+			logger.error("Could not publish detected event on 'events' exchange", e);
 		}
-		catch (IOException e) {
-			logger.error("Error publishing an event on the databus for the sensor with UUID: "+outputRoutingKey, e);
-		}
+		logger.info("Annotated event, with level: " + event.getCeLevel() + ", send on \"events\" data bus for: "
+				+ event.getCeType() + " with routingKey: " + event.getCeName());
 	}
 	
 	/**
@@ -227,10 +224,8 @@ public abstract class EventDetectionNode {
 	 * 
 	 * @param contextualEvent the object that holds the information you want to send to GDI
 	 */
-	protected void sendEvent(ContextualEvent contextualEvent){
-		
+	protected void sendEvent(ContextualEvent contextualEvent){	
 		publishEvent(contextualEvent);
-
 	}
 
 	public void setInputNodesDetails(HashMap<String, String> inputNodesDetails) {

@@ -32,9 +32,9 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 	}
 
 	@Override
-	protected EPServiceProvider getEventDetectionLogic(EPServiceProvider epService) {
+	protected void getEventDetectionLogic(EPServiceProvider epService) {
 		
-		System.out.println("\nPollution Annotated\n");
+		//System.out.println("\nPollution Annotated\n");
 		
 		nameOfStreamInEsper = getSensorStreamNameforInputName("aarhusPollution");
 
@@ -50,7 +50,7 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 		statement.addListener(new UpdateListener() {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
-				System.out.println("LOW");
+				//System.out.println("LOW POLLUTION for: "+nameOfStreamInEsper);
 			}
 		});
 		
@@ -67,7 +67,7 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 		statement.addListener(new UpdateListener() {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
-				System.out.println("MEDIUM");
+				//System.out.println("MEDIUM POLLUTION for: "+nameOfStreamInEsper);
 			}
 		});
 		
@@ -83,7 +83,7 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 		statement.addListener(new UpdateListener() {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
-				System.out.println("HIGH");
+				//System.out.println("HIGH POLLUTION for: "+nameOfStreamInEsper);
 			}
 		});
 		
@@ -99,7 +99,7 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
 
-				System.out.println("LOW->MEDIUM");
+				//System.out.println("LOW->MEDIUM POLLUTION for: "+nameOfStreamInEsper);
 				ContextualEvent aarhusPollution = new ContextualEvent(eventType, eventName, System.currentTimeMillis(),
 						getEventCoordinate(), 1);
 				sendEvent(aarhusPollution);
@@ -119,7 +119,7 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
 
-				System.out.println("Low -> High");
+				//System.out.println("LOW -> HIGH POLLUTION for: "+nameOfStreamInEsper);
 				ContextualEvent aarhusPollution = new ContextualEvent(eventType, eventName, System.currentTimeMillis(),
 						getEventCoordinate(), 2);
 				sendEvent(aarhusPollution);
@@ -138,7 +138,7 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
 
-				System.out.println("Medium -> Low");
+				//System.out.println("MEDIUM -> LOW POLLUTION for: "+nameOfStreamInEsper);
 				ContextualEvent aarhusPollution = new ContextualEvent(eventType, eventName, System.currentTimeMillis(),
 						getEventCoordinate(), 0);
 				sendEvent(aarhusPollution);
@@ -157,7 +157,7 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
 
-				System.out.println("Medium -> High");
+				//System.out.println("MEDIUM -> HIGH POLLUTION for: "+nameOfStreamInEsper);;
 				ContextualEvent aarhusPollution = new ContextualEvent(eventType, eventName, System.currentTimeMillis(),
 						getEventCoordinate(), 2);
 				sendEvent(aarhusPollution);
@@ -177,7 +177,7 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
 
-				System.out.println("High -> Low");
+				//System.out.println("HIGH -> LOW POLLUTION for: "+nameOfStreamInEsper);
 				ContextualEvent aarhusPollution = new ContextualEvent(eventType, eventName, System.currentTimeMillis(),
 						getEventCoordinate(), 0);
 				sendEvent(aarhusPollution);
@@ -197,7 +197,7 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 
 			public void update(EventBean[] arg0, EventBean[] arg1) {
 
-				System.out.println("High -> Medium");
+				//System.out.println("HIGH -> MEDIUM POLLUTION for: "+nameOfStreamInEsper);
 				ContextualEvent aarhusPollution = new ContextualEvent(eventType, eventName, System.currentTimeMillis(),
 						getEventCoordinate(), 1);
 				sendEvent(aarhusPollution);
@@ -205,7 +205,6 @@ public class AarhusPollutionEventDetectionNode extends EventDetectionNode {
 			}
 		});
 
-		return null;
 	}
 
 }
